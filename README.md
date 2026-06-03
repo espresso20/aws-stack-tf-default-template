@@ -11,16 +11,16 @@ Base scaffold for AWS Terraform stacks. Use **Use this template** (or `gh repo c
     ├── main.tf                       # empty — add your resources here
     └── env/
         └── dev/
-            ├── backend.tfvars.example
-            └── terraform.tfvars.example
+            ├── dev.backend.tfvars    # tf backend state variables
+            └── dev.terraform.tfvars  # tf stack variables
+        └── stage/
+            ├── stage.backend.tfvars
+            ├── stage.terraform.tfvars
 ```
 
 ## Quick start
 
 ```bash
-cp terraform/env/dev/backend.tfvars.example  terraform/env/dev/dev.backend.tfvars
-cp terraform/env/dev/terraform.tfvars.example terraform/env/dev/dev.terraform.tfvars
-# fill in both files, then:
 aws sso login --profile <your-profile>
 make init dev
 ```
