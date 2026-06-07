@@ -45,6 +45,7 @@ help:
 	@printf "$(BOLD)Usage:$(RESET)\n"
 	@printf "  make $(CYAN)<command> <env>$(RESET) $(YELLOW)[target='resource'] [auto=true]$(RESET)\n\n"
 	@printf "$(BOLD)Commands:$(RESET)\n"
+	@printf "  $(CYAN)bootstrap$(RESET) <env>                  Create the S3 state bucket (one-time, before init)\n"
 	@printf "  $(CYAN)init$(RESET)      <env>                  Init backend for the given environment\n"
 	@printf "  $(CYAN)plan$(RESET)      <env>                  Preview changes\n"
 	@printf "  $(CYAN)apply$(RESET)     <env>                  Apply changes (prompts for confirmation)\n"
@@ -69,7 +70,19 @@ help:
 	@printf "  cp terraform/env/dev/dev.terraform.tfvars.example  terraform/env/dev/dev.terraform.tfvars\n"
 	@printf "  # edit both files, then:\n"
 	@printf "  aws sso login --profile <your-profile>\n"
+	@printf "  make bootstrap dev   # one-time: creates the S3 state bucket\n"
 	@printf "  make init dev\n\n"
+
+# ── bootstrap ─────────────────────────────────────────────────────────────────
+# One-time creation of the S3 backend bucket for an environment, before `init`.
+# Solves the chicken-and-egg: the bucket holding TF state can't be managed by
+# that same state. Idempotent — safe to re-run.
+.PHONY: bootstrap
+bootstrap:
+	$(call require-env,bootstrap)
+	@printf "\n$(BOLD)$(CYAN)» bootstrap$(RESET) — environment: $(BOLD)$(ENV)$(RESET)\n\n"
+	./scripts/bootstrap-state.sh $(ENV)
+	@printf "\n$(GREEN)✓ bootstrap complete$(RESET)\n\n"
 
 # ── init ──────────────────────────────────────────────────────────────────────
 # Initialises the S3 backend for the target environment.
