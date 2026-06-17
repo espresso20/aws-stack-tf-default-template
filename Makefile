@@ -89,7 +89,7 @@ preflight:
 	$(call require-env,auth)
 	@[ -x "$(PREFLIGHT)" ] || { \
 		printf "$(RED)$(BOLD)error:$(RESET) cloud preflight not found: $(PREFLIGHT)\n"; \
-		printf "  clone it next to this repo:  git clone <cloud-bootstraper> $(BOOTSTRAPER)\n"; \
+		printf "  clone it next to this repo:  git clone https://github.com/espresso20/cloud-bootstraper.git $(BOOTSTRAPER)\n"; \
 		printf "  or point at it:  make ... BOOTSTRAPER=/path/to/cloud-bootstraper\n"; \
 		exit 1; \
 	}
